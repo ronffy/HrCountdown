@@ -1,11 +1,11 @@
 /** 
- ** HrCountdown 精确到毫秒的倒计时 
+ ** HrCountdown 精确到毫秒的倒计时js插件  
  ** By hairong.W 
  ** 2016-5-4 
  **/
 (function($){
 	/*@param [必选] obj 2个属性：
-        date ：结束的时间，支持合法的Date参数
+        date ：结束的时间，支持合法的日期格式和时间戳
         box : 计时容器元素*/
 	function HrCountdown(obj){
 		this.getObj = {
@@ -119,6 +119,10 @@
 // 使用demo---/s
 // HrCountdown({
 // 	date : "2017-8-3 18:57:11", 
+// 	box : $("#timeBox")
+// });
+// HrCountdown({
+// 	date : 1454567000123, 
 // 	box : $("#timeBox")
 // });
 // 使用demo---/e

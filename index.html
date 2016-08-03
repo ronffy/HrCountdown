@@ -22,121 +22,8 @@
 </div>
 
 <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<script src="HrCountdown.js"></script>
 <script>
-
-(function($){
-	/*@param [必选] obj 2个属性：
-        date ：结束的时间，支持合法的Date参数
-        box : 计时容器元素*/
-	function HrCountdown(obj){
-		this.getObj = {
-			date : obj.date,
-			box : $(obj.box)
-		};
-		var box = this.getObj.box;
-		this.elChild = {
-			hm : box.find(".countdown-hm"),
-			sec : box.find(".countdown-sec"),
-			mini : box.find(".countdown-mini"),
-			hour : box.find(".countdown-hour"),
-			day : box.find(".countdown-day"),
-			month : box.find(".countdown-month"),
-			year : box.find(".countdown-year")
-		};
-		var elChild = this.elChild;
-		this.elLength = {
-			hm : elChild.hm.length,
-			sec : elChild.sec.length,
-			mini : elChild.mini.length,
-			hour : elChild.hour.length,
-			day : elChild.day.length,
-			month : elChild.month.length,
-			year : elChild.year.length
-		};
-		this.setDom();
-	}
-	// 为小于9的分钟、小时、秒、天添加"0"前缀
-	HrCountdown.prototype.addZero = function(n){
-		var n = parseInt(n, 10);//解析字符串,返回整数
-		if(n > 0){
-			if(n <= 9)n = "0" + n;
-			return String(n);
-		}
-		return "00";
-	};
-	// 给毫秒数添加"0"前缀
-	HrCountdown.prototype.setHaomiao = function(n){
-		if(n < 10)return "00" + n.toString();
-		if(n < 100)return "0" + n.toString();
-		return n.toString();
-	};
-	// 对时间小数做向下取整：
-	HrCountdown.prototype.floorTime = function(obj){
-		if(obj.timeFull){ //非年的处理
-			obj.goal[obj.type] = Math.floor(obj.dur / obj.timeScale) > 0 ? this.addZero(Math.floor(obj.dur / obj.timeScale) % obj.timeFull) : "00";
-		}else{ //年份无需前缀加"0"
-			obj.goal[obj.type] = Math.floor(obj.dur / obj.timeScale) > 0 ? Math.floor(obj.dur / obj.timeScale) : "00";
-		}
-	};
-	// (有返回值) 根据传入的结束时间跟当前时间对比，返回当前距离结束的时间对象：
-	HrCountdown.prototype.setTime = function(){
-		var _this = this,
-			now = new Date(),
-			now_time = now.getTime(),
-			this_time = (new Date(this.getObj.date)).getTime(),
-			dur = (this_time - now_time) / 1000 , 
-			mss = this_time - now_time ,
-			pms = {
-				hm:"000",
-				sec: "00",
-				mini: "00",
-				hour: "00",
-				day: "00",
-				month: "00",
-				year: "00"
-			},
-			elLength = this.elLength;
-		if(mss > 20){
-			elLength.hm ? pms.hm = _this.setHaomiao(mss % 1000) : pms.hm = null;
-			elLength.sec ? (pms.sec = _this.addZero(dur % 60)) : pms.sec = null;
-			elLength.mini ? _this.floorTime({ dur:dur, goal:pms, type : "mini", timeScale : 60, timeFull : 60}) : pms.mini = null;
-			elLength.hour ? _this.floorTime({ dur:dur, goal:pms, type : "hour", timeScale : 3600, timeFull : 24}) : pms.hour = null;
-			elLength.day ? _this.floorTime({ dur:dur, goal:pms, type : "day", timeScale : 86400, timeFull : 30}) : pms.day = null;
-			//月份，以实际平均每月秒数计算
-			elLength.month ? _this.floorTime({ dur:dur, goal:pms, type : "month", timeScale : 2629744, timeFull : 12}) : pms.month = null;
-			//年份，按按回归年365天5时48分46秒算
-			elLength.year ? _this.floorTime({ dur:dur, goal:pms, type : "year", timeScale : 31556926}) : pms.year = null;
-		}else if(mss > 0){
-			pms.year=pms.month=pms.day=pms.hour=pms.mini=pms.sec="00";
-			pms.hm = "000";
-		}else{
-			console.warn('结束了');
-			return;
-		}
-		return pms;
-	};
-	// 根据setTime方法返回的时间对象，渲染在页面上：
-	HrCountdown.prototype.setDom = function(){
-		var _this = this,
-			pms = _this.setTime(),
-			elChild = this.elChild;
-		if(pms){
-			pms.hm && elChild.hm.html(pms.hm);
-			pms.sec && elChild.sec.html(pms.sec);
-			pms.mini && elChild.mini.html(pms.mini);
-			pms.hour && elChild.hour.html(pms.hour);
-			pms.day && elChild.day.html(pms.day);
-			pms.month && elChild.month.html(pms.month);
-			pms.year && elChild.year.html(pms.year);
-			setTimeout(_this.setDom.bind(_this), 1);
-		}
-	};
-
-	window.HrCountdown = function(obj){
-		new HrCountdown(obj);
-	};
-})(jQuery);
-
 // 使用demo---/s
 HrCountdown({
 	date : "2017-8-3 18:57:11", 
@@ -144,7 +31,6 @@ HrCountdown({
 });
 // 使用demo---/e
 </script>
-
 </div>
 </body>
 </html>

@@ -10,7 +10,8 @@
 	function HrCountdown(obj){
 		this.getObj = {
 			date : obj.date,
-			box : $(obj.box)
+			box : $(obj.box),
+			end : obj.end || null
 		};
 		var box = this.getObj.box;
 		this.elChild = {
@@ -34,6 +35,7 @@
 		};
 		this.setDom();
 	}
+
 	// 为小于9的分钟、小时、秒、天添加"0"前缀
 	HrCountdown.prototype.addZero = function(n){
 		var n = parseInt(n, 10);//解析字符串,返回整数
@@ -43,12 +45,14 @@
 		}
 		return "00";
 	};
+
 	// 给毫秒数添加"0"前缀
 	HrCountdown.prototype.setHaomiao = function(n){
 		if(n < 10)return "00" + n.toString();
 		if(n < 100)return "0" + n.toString();
 		return n.toString();
 	};
+
 	// 对时间小数做向下取整：
 	HrCountdown.prototype.floorTime = function(obj){
 		if(obj.timeFull){ //非年的处理
@@ -57,25 +61,19 @@
 			obj.goal[obj.type] = Math.floor(obj.dur / obj.timeScale) > 0 ? Math.floor(obj.dur / obj.timeScale) : "00";
 		}
 	};
+
 	// (有返回值) 根据传入的结束时间跟当前时间对比，返回当前距离结束的时间对象：
 	HrCountdown.prototype.setTime = function(){
 		var _this = this,
+			_this_getobj = _this.getObj,
 			now = new Date(),
 			now_time = now.getTime(),
-			this_time = (new Date(this.getObj.date)).getTime(),
+			this_time = (new Date(_this_getobj.date)).getTime(),
 			dur = (this_time - now_time) / 1000 , 
 			mss = this_time - now_time ,
-			pms = {
-				hm:"000",
-				sec: "00",
-				mini: "00",
-				hour: "00",
-				day: "00",
-				month: "00",
-				year: "00"
-			},
+			pms = {},//属性为各时间类型的对象
 			elLength = this.elLength;
-		if(mss > 20){
+		if(mss > 40){
 			elLength.hm ? pms.hm = _this.setHaomiao(mss % 1000) : pms.hm = null;
 			elLength.sec ? (pms.sec = _this.addZero(dur % 60)) : pms.sec = null;
 			elLength.mini ? _this.floorTime({ dur:dur, goal:pms, type : "mini", timeScale : 60, timeFull : 60}) : pms.mini = null;
@@ -89,17 +87,20 @@
 			pms.year=pms.month=pms.day=pms.hour=pms.mini=pms.sec="00";
 			pms.hm = "000";
 		}else{
-			console.warn('结束了');
+			// console.log('结束了');
+			_this_getobj.end && _this_getobj.end(_this);
 			return;
 		}
 		return pms;
 	};
+
 	// 根据setTime方法返回的时间对象，渲染在页面上：
 	HrCountdown.prototype.setDom = function(){
 		var _this = this,
 			pms = _this.setTime(),
 			elChild = this.elChild;
 		if(pms){
+			console.log(1);
 			pms.hm && elChild.hm.html(pms.hm);
 			pms.sec && elChild.sec.html(pms.sec);
 			pms.mini && elChild.mini.html(pms.mini);
@@ -107,7 +108,7 @@
 			pms.day && elChild.day.html(pms.day);
 			pms.month && elChild.month.html(pms.month);
 			pms.year && elChild.year.html(pms.year);
-			setTimeout(_this.setDom.bind(_this), 1);
+			setTimeout(_this.setDom.bind(_this), pms.hm ? 10 : 500); //如果需要精确到毫秒，则10毫秒渲染一次dom，反之则500毫秒渲染一次dom
 		}
 	};
 
@@ -118,11 +119,12 @@
 
 // 使用demo---/s
 // HrCountdown({
-// 	date : "2017-8-3 18:57:11", 
-// 	box : $("#timeBox")
+// 	date : 1454567000123, 
+// 	box : $("#timeBox"),
+//  end : function(_this){ } //倒计时结束后的回调,传进来的实参是实例的this指针
 // });
 // HrCountdown({
-// 	date : 1454567000123, 
+// 	date : "2017-8-3 18:57:11", 
 // 	box : $("#timeBox")
 // });
 // 使用demo---/e

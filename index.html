@@ -26,8 +26,13 @@
 <script>
 // 使用demo---/s
 HrCountdown({
-	date : "2017-8-3 18:57:11", 
-	box : $("#timeBox")
+	date : "2022-5-5 10:40:15", 
+	box : $("#timeBox"),
+  end : function(_this){
+    //参数是当前实例的this指针
+    console.log(_this); 
+    alert("活动已经结束！")
+  }
 });
 // 使用demo---/e
 </script>

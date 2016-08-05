@@ -7,7 +7,8 @@
 <code>
 HrCountdown({
 	date : "2017-8-3 18:57:11", 
-	box : $("#timeBox")
+	box : $("#timeBox"),
+	end : function(_this){ } //倒计时结束后的回调,传进来的实参是实例的this指针
 });
 </code>
 <br/>
@@ -15,8 +16,9 @@ HrCountdown({
 <br/>
 <code>
 HrCountdown({
-	date : 1450987000123, 
-	box : $("#timeBox")
+	date : 1454567000123, 
+	box : $("#timeBox"),
+	end : function(_this){ } //倒计时结束后的回调,传进来的实参是实例的this指针
 });
 </code>
 <br/>

@@ -1,4 +1,4 @@
-### [点我预览](https://wanghairong-i.github.io/HrCountdown/)
+### [点我预览](https://roonly.github.io/HrCountdown/)
 
 # HrCountdown 精确到毫秒的倒计时js插件
 

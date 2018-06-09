@@ -1,4 +1,3 @@
-### [点我预览](https://roonly.github.io/HrCountdown/)
 
 # HrCountdown 精确到毫秒的倒计时js插件
 
